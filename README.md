@@ -8,8 +8,11 @@
   - [Services and responsibilities](#services-and-responsibilities)
     - [Today](#today)
     - [Future](#future)
-  - [Steps/TODO](#stepstodo)
   - [The Architecture](#the-architecture)
+    - [High level](#high-level)
+    - [Infrastructure (in AWS)](#infrastructure-in-aws)
+    - [Future Infrastructure ideas (in AWS)](#future-infrastructure-ideas-in-aws)
+  - [Steps/TODO](#stepstodo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -51,11 +54,30 @@ Q&A service is responsible for providing questions and answers, with one correct
 - Game History Service stores statistics of completed games such as number of players, duration of game, number of rounds, who won so that we can analyse how well the game is doing
 - Leaderboard Service for storing top performing users by period of time, region, category etc.
 
+## The Architecture
+
+### High level
+Game Service is a Rails app with DynamoDB for storing game state and RabbitMQ for messaging winners and ending game per user -> requests -> Q&A service - another Rails app with DynamoDB for storing questions and answers
+
+### Infrastructure (in AWS)
+
+Game service - ECS Fargate manually scaled service with ALB in a public subnet, DynamoDB stores game state, and RabbitMQ on AmazonMQ is used for messaging
+
+Q&A service - ECS Fargate manually scaled service in a private subnet, DynamoDB stores questions and answers, ECS scheduled task to run Ruby rake task at regular interval to ingest questions and answers into DynamoDB
+
+Game service requests Q&A service via HTTP endpoint and relies on configuration or service discovery
+
+The infrastructure is setup, deployed and maintained via AWS Copilot
+
+### Future Infrastructure ideas (in AWS)
+
+- Autoscale ECS Fargate service using Cloudwatch metrics
+- SNS + SQS for communication between Game and Q&A Service for scaling to very high throughputs
+
+
 ## Steps/TODO
 
 - [ ] Get a list of multiple choice questions and answers, with the correct answer (q&a)
 - [ ] Store a list of q&a in a database
 - [ ] Create a service with http endpoint that outputs q&a
 - [ ] 
-
-## The Architecture
