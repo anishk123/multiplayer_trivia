@@ -31,16 +31,19 @@ The game consists of multiple rounds. In each round players are presented a ques
 
 ## Services and responsibilities
 
-### Today
+### Current
 2 services - Q&A service and Game service
 
 Game service is responsible for running games, which means
 1. creating a game
-1. allowing users to connect to the game
-1. creating a round
+1. showing a list of games that users can join while not showing already started games
+1. allowing users to connect to a not started game
+1. starting a game
+1. creating new rounds if multiple winners exist or first round
 1. displaying a question (by getting it from Q&A service)
-1. deciding winners of round and creating new round if more than 2 winners
+1. deciding winners of round and creating new round if more than 1 winner
 1. completing game and displaying winner
+1. ending the game
 
 Q&A service is responsible for providing questions and answers, with one correct answer
 1. scrape/obtain q&a from the web
@@ -57,13 +60,13 @@ Q&A service is responsible for providing questions and answers, with one correct
 ## The Architecture
 
 ### High level
-Game Service is a Rails app with DynamoDB for storing game state and RabbitMQ for messaging winners and ending game per user -> requests -> Q&A service - another Rails app with DynamoDB for storing questions and answers
+Game Service is a Rails app with DynamoDB for storing game state and RabbitMQ for messaging winners and ending game per user -> requests -> Q&A service - another Rails app with Aurora Postgres for storing questions and answers
 
-### Infrastructure (in AWS)
+### Current Infrastructure (in AWS)
 
 Game service - ECS Fargate manually scaled service with ALB in a public subnet, DynamoDB stores game state, and RabbitMQ on AmazonMQ is used for messaging
 
-Q&A service - ECS Fargate manually scaled service in a private subnet, DynamoDB stores questions and answers, ECS scheduled task to run Ruby rake task at regular interval to ingest questions and answers into DynamoDB
+Q&A service - ECS Fargate manually scaled service in a private subnet, Aurora Postgres stores questions and answers, ECS scheduled task to run Ruby rake task at regular interval to ingest questions and answers into DynamoDB
 
 Game service requests Q&A service via HTTP endpoint and relies on configuration or service discovery
 
@@ -74,6 +77,12 @@ The infrastructure is setup, deployed and maintained via AWS Copilot
 - Autoscale ECS Fargate service using Cloudwatch metrics
 - SNS + SQS for communication between Game and Q&A Service for scaling to very high throughputs
 
+## Setup instructions
+- Install AWS Copilot
+```zsh
+brew install aws/tap/copilot-cli 
+```
+- 
 
 ## Steps/TODO
 
