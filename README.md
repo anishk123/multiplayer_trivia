@@ -6,12 +6,13 @@
   - [The Game](#the-game)
   - [Important details](#important-details)
   - [Services and responsibilities](#services-and-responsibilities)
-    - [Today](#today)
+    - [Current](#current)
     - [Future](#future)
   - [The Architecture](#the-architecture)
     - [High level](#high-level)
-    - [Infrastructure (in AWS)](#infrastructure-in-aws)
+    - [Current Infrastructure (in AWS)](#current-infrastructure-in-aws)
     - [Future Infrastructure ideas (in AWS)](#future-infrastructure-ideas-in-aws)
+  - [Setup instructions](#setup-instructions)
   - [Steps/TODO](#stepstodo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

@@ -1,0 +1,56 @@
+version: "3.9"
+
+## Setup
+# cd /Users/anishk/Documents/docker
+# mkdir -p common/nodejs-14.16.0-r0/node_modules
+# mkdir -p common/ruby-3.0.0/bundle
+# docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/anishk/Documents/docker/common/nodejs-14.16.0-r0/node_modules nodejs-14.16.0-r0-node_modules
+# docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/anishk/Documents/docker/common/ruby-3.0.0/bundle ruby-3.0.0-bundle
+
+x-defaults:
+  app: &default_app
+    environment: &enviroments
+      RAILS_ENV: development
+    user: "${UID}:${GID}"
+
+services:
+  db:
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+    image: postgres:13-alpine
+
+  app:
+    <<: *default_app
+    build:
+      context: ${PWD}
+    command:
+      - sh
+      - -c
+      - |
+        rm -f tmp/pids/server.pid
+        bundle config set --local path '/project/vendor'
+        bundle install
+        yarn install --check-files
+        bin/rails s -p 3000 -b '0.0.0.0'
+    depends_on:
+      - db
+    environment:
+      <<: *enviroments
+      CHROMEDRIVER_PATH: /usr/bin/chromedriver
+      DB_HOST: db
+      DB_USERNAME: postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${PWD}:/project:delegated
+      - gem_cache:/project/vendor:cached
+      - node_modules:/project/node_modules:cached
+
+volumes:
+  gem_cache:
+    external: true
+    name: ruby-3.0.0-bundle
+  node_modules:
+    external: true
+    name: nodejs-14.16.0-r0-node_modules
