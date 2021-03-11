@@ -91,8 +91,20 @@ The infrastructure is setup, deployed and maintained via AWS Copilot
 > docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/USER/Documents/docker/common/nodejs-14.16.0-r0/node_modules nodejs-14.16.0-r0-node_modules
 > docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/USER/Documents/docker/common/ruby-3.0.0/bundle ruby-3.0.0-bundle
 ```
-
-- 
+- Startup the qa-service
+```zsh
+> cd qa-service
+> docker-compose up -d
+> docker-compose exec app bundle exec rails db:reset
+> docker-compose exec app bundle exec rails db:setup
+> docker-compose exec app bundle exec rails db:migrate
+```
+http://localhost:3000 will be working now!
+*Note: The qa-service was created using*
+```zsh
+docker-compose run --no-deps app bundle exec rails new . --api --force --database=postgresql
+``` 
+ref: https://www.blocknot.es/2021-02-06-docker-rails-6-dev-environment/, https://docs.docker.com/compose/rails/, https://medium.com/@guillaumeocculy/setting-up-rails-6-with-postgresql-webpack-on-docker-a51c1044f0e4
 
 ## Steps/TODO
 
