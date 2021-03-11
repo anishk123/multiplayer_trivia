@@ -101,7 +101,7 @@ The infrastructure is setup, deployed and maintained via AWS Copilot
 > docker-compose exec app bundle exec rails db:setup
 > docker-compose exec app bundle exec rails db:migrate
 ```
-> http://localhost:3000 will be working now!
+http://localhost:3000 will be working now!
 
 
 >> *Note: The qa-service was created using*
