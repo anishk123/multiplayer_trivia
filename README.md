@@ -78,11 +78,20 @@ The infrastructure is setup, deployed and maintained via AWS Copilot
 - Autoscale ECS Fargate service using Cloudwatch metrics
 - SNS + SQS for communication between Game and Q&A Service for scaling to very high throughputs
 
-## Setup instructions
+## Setup instructions on Mac OSX
 - Install AWS Copilot
 ```zsh
-brew install aws/tap/copilot-cli 
+> brew install aws/tap/copilot-cli 
 ```
+- Create node_modules and rails gems local cache to make docker-compose for local dev faster
+```zsh
+> cd /Users/USER/Documents/docker
+> mkdir -p common/nodejs-14.16.0-r0/node_modules
+> mkdir -p common/ruby-3.0.0/bundle
+> docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/USER/Documents/docker/common/nodejs-14.16.0-r0/node_modules nodejs-14.16.0-r0-node_modules
+> docker volume create --driver local --opt type=none --opt o=bind --opt device=/Users/USER/Documents/docker/common/ruby-3.0.0/bundle ruby-3.0.0-bundle
+```
+
 - 
 
 ## Steps/TODO
