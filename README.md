@@ -104,11 +104,17 @@ The infrastructure is setup, deployed and maintained via AWS Copilot
 http://localhost:3000 will be working now!
 
 
->> *Note: The qa-service was created using*
+> Note: The qa-service was created using
 ```zsh
 > docker-compose run --no-deps app bundle exec rails new . --api --force --database=postgresql
+> docker-compose exec app bundle exec rails generate delayed_job:active_record
+> docker-compose exec app bundle exec rails db:migrate
 ``` 
->> ref: https://www.blocknot.es/2021-02-06-docker-rails-6-dev-environment/, https://docs.docker.com/compose/rails/, https://medium.com/@guillaumeocculy/setting-up-rails-6-with-postgresql-webpack-on-docker-a51c1044f0e4
+> ref: https://www.blocknot.es/2021-02-06-docker-rails-6-dev-environment/, https://docs.docker.com/compose/rails/, https://medium.com/@guillaumeocculy/setting-up-rails-6-with-postgresql-webpack-on-docker-a51c1044f0e4
+> To run the delayed_job that inserts q&a from https://opentdb.com/api.php
+```zsh
+> docker-compose exec app bundle exec rails jobs:workoff
+```
 
 ## Steps/TODO
 
