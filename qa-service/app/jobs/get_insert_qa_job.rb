@@ -18,7 +18,17 @@ class GetInsertQaJob < ApplicationJob
     res = JSON.parse Net::HTTP.get(qa_uri)
     if res['results']
       res['results'].each do |qa|
-
+        Question.create(
+          question: qa["question"],
+          category: qa["category"],
+          difficulty: qa["difficulty"],
+          answers_attributes: [
+            { answer: qa["incorrect_answers"][0], correct: false },
+            { answer: qa["incorrect_answers"][1], correct: false },
+            { answer: qa["incorrect_answers"][2], correct: false },
+            { answer: qa["correct_answer"], correct: true }
+          ]
+        ) 
       end
     end
   end

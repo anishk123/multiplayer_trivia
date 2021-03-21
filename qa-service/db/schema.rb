@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_12_061205) do
+ActiveRecord::Schema.define(version: 2021_03_21_053111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,13 +39,8 @@ ActiveRecord::Schema.define(version: 2021_03_12_061205) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "questions", force: :cascade do |t|
-    t.integer "category"
-    t.integer "difficulty"
-    t.text "question"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
+# Could not dump table "questions" because of following StandardError
+#   Unknown type 'question_categories' for column 'category'
 
   add_foreign_key "answers", "questions"
 end
