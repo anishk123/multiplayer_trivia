@@ -14,12 +14,12 @@ class Question < ApplicationRecord
     history: "History", 
     politics: "Politics", 
     sports: "Sports"
-  }, _default: "General Knowledge"
+  }, _default: :general_knowledge
   enum difficulty: {
     easy: "easy", 
     medium: "medium", 
     hard: "hard"
-  }, _default: "easy"
+  }, _default: :easy
 
   scope :rand_ord, -> { order("RANDOM()") }
   scope :rand_easy_q, -> { rand_ord.easy.first }
@@ -37,5 +37,15 @@ class Question < ApplicationRecord
 
   def correct_ans?(ans_text)
     self.class.correct_ans_by_q(self).answer.strip.downcase == ans_text.strip.downcase 
+  end
+
+  def display
+    {
+      question: question,
+      category: read_attribute_before_type_cast(:category),
+      difficulty: difficulty,
+      answers: answers_list,
+      correct_answer: answers.correct.first.answer
+    }
   end
 end
